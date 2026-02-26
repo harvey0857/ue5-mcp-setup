@@ -14,55 +14,68 @@ UE5 C++ Plugin (UnrealMCP)
 UE5 Editor Subsystem
 ```
 
-## 快速安裝
+## Windows 安裝教學
 
-**macOS / Linux：**
+### 1. 安裝前置工具
+
+- **Git**: https://git-scm.com/download/win
+- **Node.js**: https://nodejs.org/
+- **uv** (Python 套件管理器)：開 PowerShell 執行：
+  ```powershell
+  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+  ```
+- **Claude Code**：
+  ```powershell
+  npm install -g @anthropic-ai/claude-code
+  ```
+
+### 2. 一鍵安裝
+
+```powershell
+git clone https://github.com/harvey0857/ue5-mcp-setup.git
+cd ue5-mcp-setup
+.\setup.ps1
+```
+
+腳本會自動：
+- Clone [chongdashu/unreal-mcp](https://github.com/chongdashu/unreal-mcp) 到 `%USERPROFILE%\unreal-mcp`
+- 用 uv 安裝 Python 依賴
+- 設定 Claude Code 的 MCP 連線
+
+### 3. UE5 插件安裝（手動）
+
+將 `%USERPROFILE%\unreal-mcp\MCPGameProject\Plugins\UnrealMCP` 整個資料夾複製到你的 UE5 專案的 `Plugins\` 下。
+
+開啟 UE5 編輯器，到 **Edit → Plugins** 確認 **UnrealMCP** 已啟用。
+
+### 4. 驗證
+
+1. 開啟 UE5 編輯器（確認插件已載入）
+2. 開一個新的 Claude Code session
+3. 請 Claude 在場景中建立一個 Cube
+4. 確認 UE5 編輯器中出現 Cube
+
+---
+
+## macOS / Linux 安裝
+
+### 前置工具
+
+- **uv**：`curl -LsSf https://astral.sh/uv/install.sh | sh`
+- **Claude Code**：`npm install -g @anthropic-ai/claude-code`
+
+### 安裝
+
 ```bash
+git clone https://github.com/harvey0857/ue5-mcp-setup.git
+cd ue5-mcp-setup
 chmod +x setup.sh
 ./setup.sh
 ```
 
-**Windows (PowerShell)：**
-```powershell
-.\setup.ps1
-```
+後續步驟同 Windows 的步驟 3、4。
 
-## 手動安裝
-
-### 1. 前置需求
-
-- [uv](https://docs.astral.sh/uv/) - Python 套件管理器
-- [Claude Code](https://claude.ai/claude-code) - CLI 工具
-- UE5 5.4+
-
-### 2. 安裝 MCP Server
-
-```bash
-git clone https://github.com/chongdashu/unreal-mcp.git ~/unreal-mcp
-cd ~/unreal-mcp/Python
-uv sync --python 3.12
-```
-
-### 3. UE5 專案設定
-
-將 `~/unreal-mcp/MCPGameProject/Plugins/UnrealMCP` 複製到你的 UE5 專案的 `Plugins/` 資料夾。
-
-開啟 UE5 編輯器，確認以下插件已啟用：
-- UnrealMCP（剛複製的）
-- Remote Control（內建）
-
-### 4. 設定 Claude Code
-
-```bash
-claude mcp add ue5 -- uv --directory ~/unreal-mcp/Python run unreal_mcp_server.py
-```
-
-### 5. 驗證
-
-1. 啟動 UE5 編輯器（確認插件已載入）
-2. 開啟新的 Claude Code session
-3. 請 Claude 在場景中建立一個 Cube
-4. 確認 UE5 編輯器中出現 Cube
+---
 
 ## 功能
 

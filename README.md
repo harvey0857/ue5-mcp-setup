@@ -16,9 +16,15 @@ UE5 Editor Subsystem
 
 ## 快速安裝
 
+**macOS / Linux：**
 ```bash
 chmod +x setup.sh
 ./setup.sh
+```
+
+**Windows (PowerShell)：**
+```powershell
+.\setup.ps1
 ```
 
 ## 手動安裝

@@ -1,52 +1,52 @@
-# UE5 MCP Server 安裝腳本 (Windows PowerShell)
+# UE5 MCP Server Setup Script (Windows PowerShell)
 $ErrorActionPreference = "Stop"
 
-Write-Host "=== UE5 MCP Server 安裝腳本 ===" -ForegroundColor Cyan
+Write-Host "=== UE5 MCP Server Setup ===" -ForegroundColor Cyan
 Write-Host ""
 
-# 1. 檢查前置工具
+# 1. Check prerequisites
 function Check-Command {
     param([string]$name, [string]$installHint)
     if (!(Get-Command $name -ErrorAction SilentlyContinue)) {
-        Write-Host "❌ 找不到 $name，請先安裝" -ForegroundColor Red
-        Write-Host "   $installHint"
+        Write-Host "[X] $name not found. Please install: $installHint" -ForegroundColor Red
         exit 1
     }
-    Write-Host "✅ $name 已安裝" -ForegroundColor Green
+    Write-Host "[OK] $name installed" -ForegroundColor Green
 }
 
 Check-Command "git" "https://git-scm.com/"
-Check-Command "uv" "powershell -ExecutionPolicy ByPass -c `"irm https://astral.sh/uv/install.ps1 | iex`""
+Check-Command "uv" "https://docs.astral.sh/uv/"
 Check-Command "claude" "npm install -g @anthropic-ai/claude-code"
 
 Write-Host ""
 
 # 2. Clone unreal-mcp
-$InstallDir = "$env:USERPROFILE\unreal-mcp"
+$InstallDir = Join-Path $env:USERPROFILE "unreal-mcp"
 if (Test-Path $InstallDir) {
-    Write-Host "📁 $InstallDir 已存在，跳過 clone"
+    Write-Host "[SKIP] $InstallDir already exists"
 } else {
-    Write-Host "📥 Cloning unreal-mcp..."
+    Write-Host "[INFO] Cloning unreal-mcp..."
     git clone https://github.com/chongdashu/unreal-mcp.git $InstallDir
 }
 
-# 3. 安裝 Python 依賴
-Write-Host "📦 安裝 Python 依賴..."
-Push-Location "$InstallDir\Python"
+# 3. Install Python dependencies
+Write-Host "[INFO] Installing Python dependencies..."
+$PythonDir = Join-Path $InstallDir "Python"
+Push-Location $PythonDir
 uv sync --python 3.12
 Pop-Location
 
-# 4. 設定 Claude Code MCP
-Write-Host "🔧 設定 Claude Code MCP Server..."
-claude mcp add ue5 -- uv --directory "$InstallDir\Python" run unreal_mcp_server.py
+# 4. Configure Claude Code MCP
+Write-Host "[INFO] Configuring Claude Code MCP Server..."
+claude mcp add ue5 -- uv --directory $PythonDir run unreal_mcp_server.py
 
 Write-Host ""
-Write-Host "=== ✅ 安裝完成 ===" -ForegroundColor Green
+Write-Host "=== Setup Complete ===" -ForegroundColor Green
 Write-Host ""
-Write-Host "接下來你需要手動完成："
-Write-Host "1. 把 $InstallDir\MCPGameProject\Plugins\UnrealMCP"
-Write-Host "   複製到你的 UE5 專案的 Plugins\ 資料夾"
-Write-Host "2. 開啟 UE5 編輯器，確認 UnrealMCP 插件已啟用"
-Write-Host "3. 啟動新的 Claude Code session 即可使用"
+Write-Host "Next steps (manual):"
+Write-Host "1. Copy $InstallDir\MCPGameProject\Plugins\UnrealMCP"
+Write-Host "   to your UE5 project's Plugins\ folder"
+Write-Host "2. Open UE5 Editor, enable UnrealMCP plugin"
+Write-Host "3. Start a new Claude Code session to use it"
 Write-Host ""
-Write-Host "測試方式：在 Claude Code 中請 Claude 在場景中建立一個 Cube"
+Write-Host "Test: Ask Claude to create a Cube in the scene"

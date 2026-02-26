@@ -5,7 +5,8 @@ Write-Host "=== UE5 MCP Server 安裝腳本 ===" -ForegroundColor Cyan
 Write-Host ""
 
 # 1. 檢查前置工具
-function Check-Command($name, $installHint) {
+function Check-Command {
+    param([string]$name, [string]$installHint)
     if (!(Get-Command $name -ErrorAction SilentlyContinue)) {
         Write-Host "❌ 找不到 $name，請先安裝" -ForegroundColor Red
         Write-Host "   $installHint"
